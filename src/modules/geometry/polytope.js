@@ -24,6 +24,17 @@ export default class Polytope {
 		);
 	}
 
+	/**
+	 * Scale this polytope up (centered on the origin) by a factor
+	 * @param {number} factor - The factor to scale by
+	 */
+	scale(factor) {
+		return new Polytope(
+			this.vertices.map(e => e.scale(factor)),
+			this.faces
+		);
+	}
+
 	/** Get the 3D locations of the vertices */
 	get vertices3() {
 		return this.vertices.map(e => e.project());

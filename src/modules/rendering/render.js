@@ -58,9 +58,9 @@ export default function renderInit() {
 	/**
 	 * Method which switches the currently rendered polytope/rendering mode
 	 * @param {Polytope} polytope - The polytope to render
-	 * @param {String} mode - How to display the polytope, "normal"|"wireframe"||"points"
+	 * @param {String} mode - How to display the polytope, "normal"|"wireframe"|"points"
 	 */
-	return function (polytope, mode = "normal") {
+	return function (polytope, mode = "wireframe") {
 		/**
 		 * Remove an object from memory and the scene
 		 * @param {THREE.Object3D} - The object to be removed

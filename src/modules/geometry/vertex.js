@@ -11,9 +11,9 @@ export default class Vertex {
 		let pos = [...this.pos];
 		while (pos.length > 3) {
 			let w = pos.pop();
-			const scale = 1;
-			if (w == scale) w += 0.01;
-			pos = pos.map(e => e / (scale - w));
+			const cp = 1.5;
+			if (w == cp) w += 0.01;
+			pos = pos.map(e => e / (cp - w));
 		}
 		return new Vertex(...pos);
 	}
@@ -24,7 +24,7 @@ export default class Vertex {
 	 * @param {number} theta - The angle to rotate by
 	 */
 	rotate(axes, theta) {
-		let dim = Math.max(2, this.dim);
+		let dim = Math.max(2, this.dim, ...axes.map(e => e + 1));
 		let a = [...this.pos];
 		a.push(...new Array(dim - this.dim).fill(0));
 		let pos = math.matrix(a);
@@ -34,6 +34,14 @@ export default class Vertex {
 		rotationMatrix._data[axes[1]][axes[0]] = Math.sin(theta);
 		rotationMatrix._data[axes[1]][axes[1]] = Math.cos(theta);
 		return new Vertex(...math.multiply(rotationMatrix, pos)._data);
+	}
+
+	/**
+	 * Scale this vertex (centered on the origin) by a factor
+	 * @param {number} factor - The factor to scale by
+	 */
+	scale(factor) {
+		return new Vertex(...this.pos.map(e => e * factor));
 	}
 
 	/**
