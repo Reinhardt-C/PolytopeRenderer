@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Reintope</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				overflow: hidden;
+			}
+
+			#topbar {
+				font-size: large;
+				height: 2em;
+				line-height: 2em;
+				background-color: rgb(51, 51, 51);
+				color: white;
+				padding-left: 3px;
+				box-sizing: border-box;
+			}
+			#aside {
+				float: left;
+				width: 25vw;
+				height: calc(100vh - 2em);
+				background-color: rgb(87, 87, 87);
+			}
+			#render {
+				float: left;
+				width: 75vw;
+				height: calc(100vh - 2em);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div id="topbar">Polytope Rendering Testing</div>
+			<div id="main">
+				<div id="aside">
+					I'll add menus or something here one day, for now just enjoy this rotating tesseract.
+				</div>
+				<div id="render"></div>
+			</div>
+		</div>
+		<!-- Import math.js globally -->
+		<script src="https://unpkg.com/mathjs@9.0.0/lib/browser/math.js"></script>
+		<!-- Main file for linking together modules -->
+		<script type="module" src="./src/main.js"></script>
+	</body>
+</html>
