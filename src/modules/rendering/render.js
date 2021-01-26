@@ -89,10 +89,8 @@ export default function renderInit() {
 				break;
 			case "wireframe":
 				// Handle rendering polytopes with edges shown
-				geometry = polytope.wireframe_geometries;
-				geometry = geometry.map(e => new THREE.Line(e));
-				mesh = new THREE.Group();
-				geometry.forEach(e => mesh.add(e));
+				geometry = polytope.wireframe_geometry;
+				mesh = new THREE.LineSegments(geometry);
 				break;
 			case "points":
 				// Handle rendering polytopes with vertices shown

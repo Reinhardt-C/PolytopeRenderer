@@ -21,7 +21,7 @@ export default class Polytope {
 	rotate(axes, theta) {
 		return new Polytope(
 			this.vertices.map(e => e.rotate(axes, theta)),
-			[...this.faces.map(e => new Face(e.vertexCount, [...e.vertices]))]
+			this.faces
 		);
 	}
 
@@ -55,7 +55,7 @@ export default class Polytope {
 	 */
 	geometryFromMode(mode) {
 		if (mode == "normal") return this.geometry;
-		if (mode == "wireframe") return this.wireframe_geometries;
+		if (mode == "wireframe") return this.wireframe_geometry;
 		if (mode == "points") return this.points_geometry;
 		throw "Unknown geometry mode";
 	}
@@ -70,27 +70,15 @@ export default class Polytope {
 	}
 
 	/** Get the wireframe mode geometry */
-	get wireframe_geometries() {
-		if (this.vertices.length == 2) {
-			return [
-				new THREE.BufferGeometry().setFromPoints([
-					...this.vertices3.map(e => new THREE.Vector3(...e.pos)),
-				]),
-			];
-		}
-		let faces = [];
-		for (let i of this.faces) {
-			// Create an array of points for each face
-			let points = [
-				...i.vertices.map(i => new THREE.Vector3(...this.vertices3[i].pos)),
-				new THREE.Vector3(...this.vertices3[i.vertices[0]].pos),
-			];
-			// Create a buffer geometry which will be rendered as a line in a group
-			let l = new THREE.BufferGeometry().setFromPoints(points);
-			// Add to the array of faces
-			faces.push(l);
-		}
-		return faces;
+	get wireframe_geometry() {
+		let v3 = this.vertices3;
+		let geom = new THREE.BufferGeometry().setFromPoints(v3.map(e => new THREE.Vector3(...e.pos)));
+		let indices = [];
+		for (let i of this.faces)
+			for (let j = 0; j < i.vertexCount; j++)
+				indices.push(i.vertices[j], i.vertices[(j + 1) % i.vertexCount]);
+		geom.setIndex(indices, 1);
+		return geom;
 	}
 
 	/** Get the points mode geometry */

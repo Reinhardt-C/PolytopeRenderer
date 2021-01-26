@@ -17,42 +17,41 @@ let obj, geometry;
 // Call the rendering as an asynchronous function to allow for loading files
 (async () => {
 	// obj = await loadOFF("./load/test.off");
-	// obj = new Cube();
-	obj = new Build.dyad(1);
+	obj = new Cube();
+	// obj = new Build.dyad(1);
 	// obj = Build.regularPolygon(5);
 	// obj = Build.simplex(5).scale(2);
 	geometry = renderGeometry(obj, SETTINGS.mode);
 	// Rotation loop
 	setInterval(() => {
 		// Rotate
-		if (!SETTINGS.paused)
+		if (!SETTINGS.paused && SETTINGS.rotations.filter(e => e[1] !== 0).length > 0) {
 			for (let i of SETTINGS.rotations) {
 				obj = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame);
 			}
-		// Get the new geometry
-		let g2 = obj.geometryFromMode(SETTINGS.mode);
-		if (SETTINGS.mode == "wireframe") {
-			// For wireframes
-			for (let i in geometry) {
-				const positions = geometry[i].geometry.attributes.position.array;
-				const newPositions = g2[i].attributes.position.array;
+			// Get the new geometry
+			let g2 = obj.geometryFromMode(SETTINGS.mode);
+			if (SETTINGS.mode == "wireframe") {
+				// For wireframes
+				const positions = geometry.attributes.position.array;
+				const newPositions = g2.attributes.position.array;
 				for (let i in newPositions) positions[i] = newPositions[i];
-				geometry[i].geometry.attributes.position.needsUpdate = true;
+				geometry.attributes.position.needsUpdate = true;
+			} else if (SETTINGS.mode == "normal") {
+				// For normal view
+				const positions = geometry.attributes.position.array;
+				const newPositions = g2.attributes.position.array;
+				for (let i in newPositions) positions[i] = newPositions[i];
+				geometry.attributes.position.needsUpdate = true;
+				geometry.attributes.normal.needsUpdate = true;
+				geometry.attributes.uv.needsUpdate = true;
+			} else if (SETTINGS.mode == "points") {
+				// For point view
+				const vertices = geometry.vertices;
+				const newVertices = g2.vertices;
+				for (let i in newVertices) vertices[i] = newVertices[i];
+				geometry.verticesNeedUpdate = true;
 			}
-		} else if (SETTINGS.mode == "normal") {
-			// For normal view
-			const positions = geometry.attributes.position.array;
-			const newPositions = g2.attributes.position.array;
-			for (let i in newPositions) positions[i] = newPositions[i];
-			geometry.attributes.position.needsUpdate = true;
-			geometry.attributes.normal.needsUpdate = true;
-			geometry.attributes.uv.needsUpdate = true;
-		} else if (SETTINGS.mode == "points") {
-			// For point view
-			const vertices = geometry.vertices;
-			const newVertices = g2.vertices;
-			for (let i in newVertices) vertices[i] = newVertices[i];
-			geometry.verticesNeedUpdate = true;
 		}
 	}, 50);
 })();
@@ -91,7 +90,7 @@ let obj, geometry;
 			const t = document.createTextNode("1");
 			wrapper.append(t);
 			SETTINGS.cameraPosition.push(1);
-			SETTINGS.cameraPosRange.push([-10, 10]);
+			SETTINGS.cameraPosRange.push([0, 20]);
 			const s = slider(-10, 10, 1, 0.01);
 			s.addEventListener("input", () => {
 				SETTINGS.cameraPosition[l] = s.value;

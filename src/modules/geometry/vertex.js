@@ -3,20 +3,24 @@ import SETTINGS from "../helpers/settingsHelper.js";
 /** Class for defining vertices in arbitrary dimensions */
 export default class Vertex {
 	/** Create a vertex */
-	constructor() {
-		this.pos = [...arguments];
+	constructor(...pos) {
+		this.pos = pos;
 		while (this.pos.length < 3) this.pos.push(0);
 	}
 
 	/** Project the position of this vertex into 3 dimensions */
 	project() {
 		let pos = [...this.pos];
+		let prod = 1;
 		while (pos.length > 3) {
 			const cp =
 				SETTINGS.cameraPosition.length >= pos.length ? SETTINGS.cameraPosition[pos.length - 1] : 1;
 			let w = pos.pop();
 			if (w == cp) w += 0.01;
-			pos = pos.map(e => e / (cp - w));
+			prod /= cp - w;
+		}
+		for (let i = 0; i < pos.length; i++) {
+			pos[i] = pos[i] * prod;
 		}
 		return new Vertex(...pos);
 	}

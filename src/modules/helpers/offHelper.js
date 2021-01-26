@@ -3,7 +3,7 @@ import Face from "../geometry/face.js";
 import Polytope from "../geometry/polytope.js";
 
 /**
- * Method to parse the contents of a .off file and return a polytope
+ * Method to load the contents of a .off file and return a polytope
  * @param {String} path - The path to the .off file
  */
 export async function loadOFF(path) {
@@ -12,6 +12,10 @@ export async function loadOFF(path) {
 	return parseOFF(contents);
 }
 
+/**
+ * Method to parse the contents of a .off file and return a polytope
+ * @param {String} data - The data in .off format
+ */
 export function parseOFF(data) {
 	let lines = data
 		.split("\n")

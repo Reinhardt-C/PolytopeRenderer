@@ -5,7 +5,7 @@ class Settings {
 			[-10, 10],
 			[-10, 10],
 			[-10, 10],
-			[-10, 10],
+			[0, 20],
 		];
 		this.rotations = [];
 		this.rotPerFrame = Math.PI / 30;
