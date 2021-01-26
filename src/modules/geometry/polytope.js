@@ -48,13 +48,24 @@ export default class Polytope {
 		return array;
 	}
 
+	/**
+	 * Get the geometry from the mode
+	 * @param {String} mode - The mode of the geometry
+	 */
+	geometryFromMode(mode) {
+		if (mode == "normal") return this.geometry;
+		if (mode == "wireframe") return this.wireframe_geometries;
+		if (mode == "points") return this.points_geometry;
+		throw "Unknown geometry mode";
+	}
+
 	/** Get the normal mode geometry */
 	get geometry() {
 		// Get the vertices as a flat array
 		let verts = this.vertices3.map(e => e.pos).flat();
 		// Get the triangles (faces, according to THREE.js smh) as vertex indices
 		let faces = this.faces.map(e => e.triangles).flat();
-		return new THREE.PolyhedronGeometry(verts, faces, 1, 0);
+		return new THREE.PolyhedronBufferGeometry(verts, faces, 1, 0);
 	}
 
 	/** Get the wireframe mode geometry */
