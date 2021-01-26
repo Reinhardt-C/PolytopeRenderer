@@ -6,14 +6,18 @@ import Polytope from "../geometry/polytope.js";
  * Method to parse the contents of a .off file and return a polytope
  * @param {String} path - The path to the .off file
  */
-export default async function loadOFF(path) {
+export async function loadOFF(path) {
 	const response = await fetch(path);
 	const contents = await response.text();
-	let lines = contents
+	return parseOFF(contents);
+}
+
+export function parseOFF(data) {
+	let lines = data
 		.split("\n")
 		.map(e => e.replace(/#.*/g, "").trim())
 		.filter(e => e.length > 0);
-	if (lines[0] == "OFF" || lines[0] == "4OFF") lines.shift();
+	if (/OFF/.test(lines[0])) lines.shift();
 	const vfe = lines.shift().split(/\s+/).map(parseFloat);
 	const vcount = vfe[0];
 	const fcount = vfe[1];

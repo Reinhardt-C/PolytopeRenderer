@@ -1,4 +1,5 @@
 import * as THREE from "../ext/three.module.js";
+import Face from "./face.js";
 
 /** Base class for polytopes */
 export default class Polytope {
@@ -20,7 +21,7 @@ export default class Polytope {
 	rotate(axes, theta) {
 		return new Polytope(
 			this.vertices.map(e => e.rotate(axes, theta)),
-			this.faces
+			[...this.faces.map(e => new Face(e.vertexCount, [...e.vertices]))]
 		);
 	}
 

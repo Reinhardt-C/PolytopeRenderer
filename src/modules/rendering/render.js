@@ -1,6 +1,7 @@
 import * as THREE from "../ext/three.module.js";
 import { $ } from "../helpers/helperMethods.js";
 import mouseInit from "../helpers/mouseHelper.js";
+import SETTINGS from "../helpers/settingsHelper.js";
 
 // Setup data that will be used, stored at the top for easy manipulation
 const el = $("#render");
@@ -24,7 +25,7 @@ export default function renderInit() {
 	el.appendChild(renderer.domElement);
 	// Setup camera
 	const camera = new THREE.PerspectiveCamera(75, DEBUG.WIDTH / DEBUG.HEIGHT, 0.1, 1000);
-	camera.position.set(0, 0, 5);
+	camera.position.set(0, 0, -5);
 	camera.lookAt(0, 0, 0);
 	// Setup scene
 	const scene = new THREE.Scene();
@@ -38,13 +39,14 @@ export default function renderInit() {
 
 	// Initialize mouse/touchscreen controls
 	mouseInit(el, (dx, dy) => {
-		rotation.x += dy / 50;
+		rotation.x -= dy / 50;
 		rotation.x = Math.max(Math.min(rotation.x, Math.PI / 2), -Math.PI / 2);
 		rotation.y += dx / 50;
 	});
 
 	// Create and call animation loop
 	function animate() {
+		camera.position.set(...SETTINGS.cameraPosition.slice(0, 3));
 		// Set rotation on displayed object
 		if (scene.children.length > 2)
 			scene.children[2].rotation.set(rotation.x, rotation.y, rotation.z);
@@ -82,7 +84,7 @@ export default function renderInit() {
 				geometry = polytope.geometry;
 				mesh = new THREE.Mesh(
 					geometry,
-					new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+					new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide })
 				);
 				break;
 			case "wireframe":

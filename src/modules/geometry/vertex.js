@@ -1,3 +1,5 @@
+import SETTINGS from "../helpers/settingsHelper.js";
+
 /** Class for defining vertices in arbitrary dimensions */
 export default class Vertex {
 	/** Create a vertex */
@@ -10,8 +12,9 @@ export default class Vertex {
 	project() {
 		let pos = [...this.pos];
 		while (pos.length > 3) {
+			const cp =
+				SETTINGS.cameraPosition.length >= pos.length ? SETTINGS.cameraPosition[pos.length - 1] : 1;
 			let w = pos.pop();
-			const cp = 1.5;
 			if (w == cp) w += 0.01;
 			pos = pos.map(e => e / (cp - w));
 		}
