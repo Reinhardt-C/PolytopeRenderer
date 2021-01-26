@@ -71,8 +71,9 @@ export default class Polytope {
 
 	/** Get the wireframe mode geometry */
 	get wireframe_geometry() {
-		let v3 = this.vertices3;
-		let geom = new THREE.BufferGeometry().setFromPoints(v3.map(e => new THREE.Vector3(...e.pos)));
+		let geom = new THREE.BufferGeometry().setFromPoints(
+			this.vertices3.map(e => new THREE.Vector3(...e.pos))
+		);
 		let indices = [];
 		for (let i of this.faces)
 			for (let j = 0; j < i.vertexCount; j++)

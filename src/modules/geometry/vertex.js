@@ -34,13 +34,13 @@ export default class Vertex {
 		let dim = Math.max(2, this.dim, ...axes.map(e => e + 1));
 		let a = [...this.pos];
 		a.push(...new Array(dim - this.dim).fill(0));
-		let pos = math.matrix(a);
-		let rotationMatrix = math.identity(dim);
-		rotationMatrix._data[axes[0]][axes[0]] = Math.cos(theta);
-		rotationMatrix._data[axes[0]][axes[1]] = -Math.sin(theta);
-		rotationMatrix._data[axes[1]][axes[0]] = Math.sin(theta);
-		rotationMatrix._data[axes[1]][axes[1]] = Math.cos(theta);
-		return new Vertex(...math.multiply(rotationMatrix, pos)._data);
+		let v0 = a[axes[0]];
+		let v1 = a[axes[1]];
+		let nv0 = Math.cos(theta) * v0 - Math.sin(theta) * v1;
+		let nv1 = Math.sin(theta) * v0 + Math.cos(theta) * v1;
+		a[axes[0]] = nv0;
+		a[axes[1]] = nv1;
+		return new Vertex(...a);
 	}
 
 	/**

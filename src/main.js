@@ -20,7 +20,7 @@ let needsUpdate = false;
 	// obj = await loadOFF("./load/test.off");
 	obj = new Cube();
 	// obj = new Build.dyad(1);
-	// obj = Build.regularPolygon(5);
+	// obj = Build.regularPolygon(255, 127);
 	// obj = Build.simplex(5).scale(2);
 	geometry = renderGeometry(obj, SETTINGS.mode);
 	// Rotation loop
