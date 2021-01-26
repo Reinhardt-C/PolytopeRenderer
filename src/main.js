@@ -13,6 +13,7 @@ import SETTINGS from "./modules/helpers/settingsHelper.js";
 const renderGeometry = renderInit();
 // Obj needs to be global
 let obj, geometry;
+let needsUpdate = false;
 
 // Call the rendering as an asynchronous function to allow for loading files
 (async () => {
@@ -25,7 +26,11 @@ let obj, geometry;
 	// Rotation loop
 	setInterval(() => {
 		// Rotate
-		if (!SETTINGS.paused && SETTINGS.rotations.filter(e => e[1] !== 0).length > 0) {
+		if (
+			needsUpdate ||
+			(!SETTINGS.paused && SETTINGS.rotations.filter(e => e[1] !== 0).length > 0)
+		) {
+			needsUpdate = false;
 			for (let i of SETTINGS.rotations) {
 				obj = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame);
 			}
@@ -76,6 +81,7 @@ let obj, geometry;
 			s.addEventListener("input", () => {
 				SETTINGS.cameraPosition[i] = s.value;
 				t.nodeValue = s.value;
+				needsUpdate = true;
 			});
 			wrapper.appendChild(s);
 			campos.appendChild(wrapper);
