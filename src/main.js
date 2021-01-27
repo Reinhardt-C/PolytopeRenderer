@@ -35,26 +35,26 @@ let needsUpdate = false;
 				obj = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame);
 			}
 			// Get the new geometry
-			let g2 = obj.geometryFromMode(SETTINGS.mode);
+			// let g2 = obj.geometryFromMode(SETTINGS.mode);
+			let newVerts = obj.newVerticesFromMode(SETTINGS.mode);
 			if (SETTINGS.mode == "wireframe") {
 				// For wireframes
 				const positions = geometry.attributes.position.array;
-				const newPositions = g2.attributes.position.array;
-				for (let i in newPositions) positions[i] = newPositions[i];
+				// const newPositions = g2.attributes.position.array;
+				for (let i in newVerts) positions[i] = newVerts[i];
 				geometry.attributes.position.needsUpdate = true;
 			} else if (SETTINGS.mode == "normal") {
 				// For normal view
 				const positions = geometry.attributes.position.array;
-				const newPositions = g2.attributes.position.array;
-				for (let i in newPositions) positions[i] = newPositions[i];
+				// const newPositions = g2.attributes.position.array;
+				for (let i in newVerts) positions[i] = newVerts[i];
 				geometry.attributes.position.needsUpdate = true;
 				geometry.attributes.normal.needsUpdate = true;
-				geometry.attributes.uv.needsUpdate = true;
 			} else if (SETTINGS.mode == "points") {
 				// For point view
 				const vertices = geometry.vertices;
-				const newVertices = g2.vertices;
-				for (let i in newVertices) vertices[i] = newVertices[i];
+				// const newVertices = g2.vertices;
+				for (let i in newVerts) vertices[i] = newVerts[i];
 				geometry.verticesNeedUpdate = true;
 			}
 		}

@@ -12,7 +12,8 @@ export default class Vertex {
 	project() {
 		let pos = [...this.pos];
 		let prod = 1;
-		while (pos.length > 3) {
+		let t = pos.length;
+		for (let i = 3; i < t; i++) {
 			const cp =
 				SETTINGS.cameraPosition.length >= pos.length ? SETTINGS.cameraPosition[pos.length - 1] : 1;
 			let w = pos.pop();
@@ -31,35 +32,14 @@ export default class Vertex {
 	 * @param {number} theta - The angle to rotate by
 	 */
 	rotate(axes, theta) {
-		let dim = Math.max(2, this.dim, ...axes.map(e => e + 1));
-		let a = [...this.pos];
-		a.push(...new Array(dim - this.dim).fill(0));
-		let v0 = a[axes[0]];
-		let v1 = a[axes[1]];
-		let nv0 = Math.cos(theta) * v0 - Math.sin(theta) * v1;
-		let nv1 = Math.sin(theta) * v0 + Math.cos(theta) * v1;
-		a[axes[0]] = nv0;
-		a[axes[1]] = nv1;
+		const dim = Math.max(1, this.dim - 1, ...axes) + 1;
+		const a = [...this.pos];
+		const dif = dim - this.dim;
+		for (let i = 0; i < dif; i++) a.push(0);
+		const v0 = a[axes[0]];
+		a[axes[0]] = Math.cos(theta) * v0 - Math.sin(theta) * a[axes[1]];
+		a[axes[1]] = Math.sin(theta) * v0 + Math.cos(theta) * a[axes[1]];
 		return new Vertex(...a);
-	}
-
-	/**
-	 * Rotate a vector around the origin around a set plane by a set angle
-	 * @param {number[]} coords - The coordinates of the vector to be rotated
-	 * @param {number[]} axes - The axes (0 is X, 1 is Y, 2 is Z, 3 is W/X4, etc) that form the plane to rotate around
-	 * @param {number} theta - The angle to rotate by
-	 */
-	static rotate(coords, axes, theta) {
-		let dim = Math.max(2, coords.length, ...axes.map(e => e + 1));
-		let a = [...coords];
-		a.push(...new Array(dim - coords.length).fill(0));
-		let pos = math.matrix(a);
-		let rotationMatrix = math.identity(dim);
-		rotationMatrix._data[axes[0]][axes[0]] = Math.cos(theta);
-		rotationMatrix._data[axes[0]][axes[1]] = -Math.sin(theta);
-		rotationMatrix._data[axes[1]][axes[0]] = Math.sin(theta);
-		rotationMatrix._data[axes[1]][axes[1]] = Math.cos(theta);
-		return math.multiply(rotationMatrix, pos)._data;
 	}
 
 	/**

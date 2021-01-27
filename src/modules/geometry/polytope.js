@@ -19,10 +19,10 @@ export default class Polytope {
 	 * @param {number} theta - The angle to rotate by
 	 */
 	rotate(axes, theta) {
-		return new Polytope(
-			this.vertices.map(e => e.rotate(axes, theta)),
-			this.faces
-		);
+		let rotatedPoints = [];
+		const len = this.vertices.length;
+		for (let i = 0; i < len; i++) rotatedPoints.push(this.vertices[i].rotate(axes, theta));
+		return new Polytope(rotatedPoints, this.faces);
 	}
 
 	/**
@@ -38,7 +38,10 @@ export default class Polytope {
 
 	/** Get the 3D locations of the vertices */
 	get vertices3() {
-		return this.vertices.map(e => e.project());
+		let projectedVertices = [];
+		const len = this.vertices.length;
+		for (let i = 0; i < len; i++) projectedVertices.push(this.vertices[i].project());
+		return projectedVertices;
 	}
 
 	/** Get tha available modes for rendering this shape */
@@ -60,6 +63,19 @@ export default class Polytope {
 		throw "Unknown geometry mode";
 	}
 
+	/**
+	 * Get the new vertices for updating the structure
+	 * @param {String} mode - The mode of the geometry
+	 */
+	newVerticesFromMode(mode) {
+		const v3 = this.vertices3;
+		let points = [];
+		if (mode == "points")
+			for (let i = 0; i < v3.length; i++) points.push(new THREE.Vector3(...v3[i].pos));
+		else for (let i = 0; i < v3.length; i++) points.push(...v3[i].pos);
+		return points;
+	}
+
 	/** Get the normal mode geometry */
 	get geometry() {
 		// Get the vertices as a flat array
@@ -71,9 +87,10 @@ export default class Polytope {
 
 	/** Get the wireframe mode geometry */
 	get wireframe_geometry() {
-		let geom = new THREE.BufferGeometry().setFromPoints(
-			this.vertices3.map(e => new THREE.Vector3(...e.pos))
-		);
+		let points = [];
+		const v3 = this.vertices3;
+		for (let i = 0; i < v3.length; i++) points.push(new THREE.Vector3(...v3[i].pos));
+		let geom = new THREE.BufferGeometry().setFromPoints(points);
 		let indices = [];
 		for (let i of this.faces)
 			for (let j = 0; j < i.vertexCount; j++)
