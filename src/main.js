@@ -17,12 +17,17 @@ let needsUpdate = false;
 
 // Call the rendering as an asynchronous function to allow for loading files
 (async () => {
+	if (SETTINGS.mode == "normal")
+		alert(
+			"Normal rendering isn't well supported at this time. Non-convex shapes and rotations do not work."
+		);
 	// obj = await loadOFF("./load/test.off");
 	obj = new Cube();
 	// obj = new Build.dyad(1);
 	// obj = Build.regularPolygon(255, 127);
 	// obj = Build.simplex(5).scale(2);
 	geometry = renderGeometry(obj, SETTINGS.mode);
+	console.log(geometry);
 	// Rotation loop
 	setInterval(() => {
 		// Rotate
@@ -35,25 +40,22 @@ let needsUpdate = false;
 				obj = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame);
 			}
 			// Get the new geometry
-			// let g2 = obj.geometryFromMode(SETTINGS.mode);
 			let newVerts = obj.newVerticesFromMode(SETTINGS.mode);
 			if (SETTINGS.mode == "wireframe") {
 				// For wireframes
 				const positions = geometry.attributes.position.array;
-				// const newPositions = g2.attributes.position.array;
 				for (let i in newVerts) positions[i] = newVerts[i];
 				geometry.attributes.position.needsUpdate = true;
 			} else if (SETTINGS.mode == "normal") {
 				// For normal view
 				const positions = geometry.attributes.position.array;
-				// const newPositions = g2.attributes.position.array;
 				for (let i in newVerts) positions[i] = newVerts[i];
 				geometry.attributes.position.needsUpdate = true;
-				geometry.attributes.normal.needsUpdate = true;
+				// geometry.attributes.normal.needsUpdate = true;
+				// geometry.attributes.uv.needsUpdate = true;
 			} else if (SETTINGS.mode == "points") {
 				// For point view
 				const vertices = geometry.vertices;
-				// const newVertices = g2.vertices;
 				for (let i in newVerts) vertices[i] = newVerts[i];
 				geometry.verticesNeedUpdate = true;
 			}
