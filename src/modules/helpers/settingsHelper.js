@@ -1,6 +1,6 @@
 class Settings {
 	constructor() {
-		this.cameraPosition = [0, 0, -10, 13];
+		this.cameraPosition = [0, 0, -5, 1];
 		this.cameraPosRange = [
 			[-10, 10],
 			[-10, 10],
