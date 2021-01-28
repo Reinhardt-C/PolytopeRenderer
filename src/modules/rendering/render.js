@@ -47,6 +47,10 @@ export default function renderInit() {
 	// Create and call animation loop
 	function animate() {
 		camera.position.set(...SETTINGS.cameraPosition.slice(0, 3));
+		if (SETTINGS.zoom !== camera.zoom) {
+			camera.zoom = SETTINGS.zoom;
+			camera.updateProjectionMatrix();
+		}
 		// Set rotation on displayed object
 		if (scene.children.length > 2)
 			scene.children[2].rotation.set(rotation.x, rotation.y, rotation.z);

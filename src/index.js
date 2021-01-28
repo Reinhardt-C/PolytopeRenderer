@@ -1,6 +1,6 @@
 // Import tippy.js for tooltips
 import tippy from "tippy.js";
-import 'tippy.js/dist/tippy.css';
+import "tippy.js/dist/tippy.css";
 // Import renderer
 import renderInit from "./modules/rendering/render.js";
 // Import build
@@ -9,7 +9,7 @@ import Tesseract from "./modules/geometry/tesseract.js";
 import Build from "./modules/rendering/build.js";
 // Import helper methods
 import { $, $$, createSection, slider } from "./modules/helpers/helperMethods.js";
-// Import .off file loader (quite untested, expect bugs)
+// Import .off file loader
 import { loadOFF, parseOFF } from "./modules/helpers/offHelper.js";
 import SETTINGS from "./modules/helpers/settingsHelper.js";
 
@@ -101,10 +101,11 @@ let needsUpdate = false;
 			wrapper.append(t);
 			SETTINGS.cameraPosition.push(1);
 			SETTINGS.cameraPosRange.push([0, 20]);
-			const s = slider(-10, 10, 1, 0.01);
+			const s = slider(0, 20, 1, 0.01);
 			s.addEventListener("input", () => {
 				SETTINGS.cameraPosition[l] = s.value;
 				t.nodeValue = s.value;
+				needsUpdate = true;
 			});
 			wrapper.appendChild(s);
 			wrapper.appendChild($$("br"));
@@ -114,6 +115,22 @@ let needsUpdate = false;
 		campos.append(
 			" Note: changes to the camera position in higher dimensions than the shape being rendered will have no effect."
 		);
+	})();
+
+	// Camera settings
+	(() => {
+		const camset = createSection("Camera Settings", menus);
+		const wrapper = $$("div");
+		wrapper.innerHTML = "Zoom: ";
+		const t = document.createTextNode(SETTINGS.zoom);
+		wrapper.append(t);
+		const s = slider(0, 10, 1, 0.01);
+		s.addEventListener("input", () => {
+			SETTINGS.zoom = s.value;
+			t.nodeValue = s.value;
+		});
+		wrapper.appendChild(s);
+		camset.appendChild(wrapper);
 	})();
 
 	// Rotation section
@@ -145,15 +162,17 @@ let needsUpdate = false;
 				}
 				array[0] = axes.value.trim().split(",").map(parseFloat);
 			});
-			tippy(axes, {
-				content: `A pair of non-negative integers (comma separated) that represent 
+			try {
+				tippy(axes, {
+					content: `A pair of non-negative integers (comma separated) that represent 
 					the axes of the plane of rotation. 0 is X, 1 is Y etc`,
-			});
+				});
+			} catch (e) {}
 			wrapper.appendChild(axes);
 			wrapper.append(document.createTextNode("Speed: "));
-			const t = document.createTextNode("1");
+			const t = document.createTextNode("0");
 			wrapper.append(t);
-			const s = slider(-10, 10, 1, 0.01);
+			const s = slider(-2, 2, 0, 0.01);
 			wrapper.appendChild(s);
 			s.addEventListener("input", () => {
 				array[1] = s.value;
@@ -174,7 +193,7 @@ let needsUpdate = false;
 		const newRot = $$("button");
 		newRot.style.width = "100%";
 		newRot.addEventListener("click", () => {
-			SETTINGS.rotations.push([[0, 1], 1]);
+			SETTINGS.rotations.push([[0, 1], 0]);
 			addRotation(SETTINGS.rotations.length - 1, newRot);
 		});
 		newRot.innerText = "New Rotation";
