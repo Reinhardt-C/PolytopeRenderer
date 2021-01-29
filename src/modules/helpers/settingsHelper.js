@@ -10,7 +10,7 @@ class Settings {
 		this.rotations = [];
 		this.rotPerFrame = Math.PI / 30;
 		this.paused = false;
-		this.mode = "normal";
+		this.mode = "wireframe";
 		this.zoom = 1;
 	}
 }
