@@ -103,6 +103,6 @@ export default function renderInit() {
 				break;
 		}
 		scene.add(mesh);
-		return mesh;
+		return geometry;
 	};
 }
