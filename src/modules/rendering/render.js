@@ -88,7 +88,7 @@ export default function renderInit() {
 				geometry = polytope.geometry;
 				mesh = new THREE.Mesh(
 					geometry,
-					new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+					new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide })
 				);
 				break;
 			case "wireframe":
@@ -103,6 +103,6 @@ export default function renderInit() {
 				break;
 		}
 		scene.add(mesh);
-		return geometry;
+		return mesh;
 	};
 }

@@ -69,16 +69,9 @@ export default class Polytope {
 	 */
 	newVerticesFromMode(mode) {
 		const v3 = this.vertices3;
+		const len = v3.length;
 		let points = [];
-		if (mode == "points")
-			for (let i = 0; i < v3.length; i++) points.push(new THREE.Vector3(...v3[i].pos));
-		else for (let i = 0; i < v3.length; i++) points.push(...v3[i].pos);
-		if (mode == "normal") {
-			let verts = this.vertices3.map(e => e.pos).flat();
-			// Get the triangles (faces, according to THREE.js smh) as vertex indices
-			let faces = this.faces.map(e => e.triangles).flat();
-			return new THREE.PolyhedronBufferGeometry(verts, faces, 1, 0).vertices;
-		}
+		for (let i = 0; i < len; i++) points.push(...v3[i].pos);
 		return points;
 	}
 
@@ -108,9 +101,9 @@ export default class Polytope {
 	/** Get the points mode geometry */
 	get points_geometry() {
 		// Create an empty geometry
-		let geometry = new THREE.Geometry();
-		// Add the vertices
-		geometry.vertices.push(...this.vertices3.map(e => new THREE.Vector3(...e.pos)));
+		let geometry = new THREE.BufferGeometry().setFromPoints([
+			...this.vertices3.map(e => new THREE.Vector3(...e.pos)),
+		]);
 		return geometry;
 	}
 }

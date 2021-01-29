@@ -10,18 +10,12 @@ class Settings {
 		this.rotations = [];
 		this.rotPerFrame = Math.PI / 30;
 		this.paused = false;
-		this.mode = "wireframe";
+		this.mode = "normal";
 		this.zoom = 1;
 	}
-
-	load() {
-		return this;
-	}
-
-	save() {}
 }
 
-const SETTINGS = new Settings().load();
+const SETTINGS = new Settings();
 globalThis.SETTINGS = SETTINGS;
 
 export default SETTINGS;

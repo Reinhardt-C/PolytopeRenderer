@@ -1,6 +1,6 @@
 // Import tippy.js for tooltips
-import tippy from "tippy.js";
-import "tippy.js/dist/tippy.css";
+// import tippy from "tippy.js";
+// import "tippy.js/dist/tippy.css";
 // Import renderer
 import renderInit from "./modules/rendering/render.js";
 // Import build
@@ -15,21 +15,22 @@ import SETTINGS from "./modules/helpers/settingsHelper.js";
 
 const renderGeometry = renderInit();
 // Obj needs to be global
-let obj, geometry;
+let obj, geometry, material;
 let needsUpdate = false;
 
 // Call the rendering as an asynchronous function to allow for loading files
 (async () => {
-	if (SETTINGS.mode == "normal")
-		alert(
-			"Normal rendering isn't well supported at this time. Non-convex shapes and rotations do not work."
-		);
+	// if (SETTINGS.mode == "normal")
+	// 	alert(
+	// 		"Normal rendering isn't well supported at this time. Non-convex shapes and rotations do not work."
+	// 	);
 	// obj = await loadOFF("./load/test.off");
 	obj = new Cube();
 	// obj = new Build.dyad(1);
 	// obj = Build.regularPolygon(255, 127);
 	// obj = Build.simplex(5).scale(2);
-	geometry = renderGeometry(obj, SETTINGS.mode);
+	let mesh = renderGeometry(obj, SETTINGS.mode);
+	geometry = mesh.geometry;
 	// Rotation loop
 	setInterval(() => {
 		// Rotate
@@ -38,28 +39,17 @@ let needsUpdate = false;
 			(!SETTINGS.paused && SETTINGS.rotations.filter(e => e[1] !== 0).length > 0)
 		) {
 			needsUpdate = false;
-			for (let i of SETTINGS.rotations) {
-				obj = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame);
-			}
-			// Get the new geometry
-			let newVerts = obj.newVerticesFromMode(SETTINGS.mode);
-			if (SETTINGS.mode == "wireframe") {
-				// For wireframes
-				const positions = geometry.attributes.position.array;
-				for (let i in newVerts) positions[i] = newVerts[i];
-				geometry.attributes.position.needsUpdate = true;
-			} else if (SETTINGS.mode == "normal") {
-				// For normal view
-				const positions = geometry.attributes.position.array;
-				for (let i in newVerts) positions[i] = newVerts[i];
-				geometry.attributes.position.needsUpdate = true;
-				// geometry.attributes.normal.needsUpdate = true;
-				// geometry.attributes.uv.needsUpdate = true;
-			} else if (SETTINGS.mode == "points") {
-				// For point view
-				const vertices = geometry.vertices;
+			for (let i of SETTINGS.rotations)
+				obj.vertices = obj.rotate(i[0], i[1] * SETTINGS.rotPerFrame).vertices;
+			// This seems to be the only thing that works, so I completely remove the mesh and add a new one
+			if (SETTINGS.mode == "normal") renderGeometry(obj, "normal");
+			else {
+				// Get the new geometry
+				let newVerts = obj.newVerticesFromMode(SETTINGS.mode);
+				// console.log(newVerts);
+				const vertices = geometry.attributes.position.array;
 				for (let i in newVerts) vertices[i] = newVerts[i];
-				geometry.verticesNeedUpdate = true;
+				geometry.attributes.position.needsUpdate = true;
 			}
 		}
 	}, 50);
@@ -175,7 +165,7 @@ let needsUpdate = false;
 			const s = slider(-2, 2, 0, 0.01);
 			wrapper.appendChild(s);
 			s.addEventListener("input", () => {
-				array[1] = s.value;
+				array[1] = parseFloat(s.value);
 				t.nodeValue = s.value;
 			});
 			const remove = $$("button");
