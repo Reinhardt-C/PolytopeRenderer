@@ -41,15 +41,15 @@ Build.regularPolygon = function (order, s = 1) {
 		Array.from({ length: order }, () => {
 			let t = t1++;
 			return new Vertex(
-				Math.cos((2 * t * Math.PI) / order),
-				Math.sin((2 * t * Math.PI) / order),
+				Math.cos((2 * t * s * Math.PI) / order),
+				Math.sin((2 * t * s * Math.PI) / order),
 				0
 			);
 		}),
 		[
 			new Face(
 				order,
-				Array.from({ length: order }, () => (t2 = (t2 + s) % order))
+				Array.from({ length: order }, () => t2++)
 			),
 		]
 	);

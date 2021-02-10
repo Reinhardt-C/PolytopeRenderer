@@ -1,11 +1,13 @@
+import Element from "./element.js";
 /** Class for defining faces for a polytope */
-export default class Face {
+export default class Face extends Element {
 	/**
 	 * Create a face
 	 * @param {number} vertexCount - The number of vertices around the face
 	 * @param {number[]} vertices - Array of vertex indices
 	 */
 	constructor(vertexCount, vertices) {
+		super(vertexCount, vertices);
 		this.vertexCount = vertexCount;
 		this.vertices = vertices;
 	}

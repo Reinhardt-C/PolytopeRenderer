@@ -25,9 +25,9 @@ let needsUpdate = false;
 	// 		"Normal rendering isn't well supported at this time. Non-convex shapes and rotations do not work."
 	// 	);
 	// obj = await loadOFF("./load/test.off");
-	obj = new Cube();
+	// obj = new Cube();
 	// obj = new Build.dyad(1);
-	// obj = Build.regularPolygon(5, 2);
+	obj = Build.regularPolygon(5, 2);
 	// obj = Build.simplex(5).scale(2);
 	globalThis.obj = obj;
 	geometry = renderGeometry(obj, SETTINGS.mode);
