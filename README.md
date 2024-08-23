@@ -1,4 +1,4 @@
 # Reintope
-Open source, bad code, polytope rendering library (an objectively better version of [Miratope](https://github.com/OfficialURL/miratope))
+Open source, bad code, polytope rendering library.
 
-Test it at [Reintope](https://reinhardt-c.github.io/Reintope/dist/)
+Test it [here](https://reinhardt-c.github.io/PolytopeRenderer/dist/).
